@@ -5,13 +5,11 @@ import (
 	"encoding/hex"
 	"github.com/kenshaw/baseconv"
 	"log"
-	"os"
 	"strconv"
 	"strings"
 )
 
-// for example index start: 11111
-var index int64 = 11111
+var index int64 = 1
 
 type MyShortener struct {
 	storage map[string]string
@@ -41,7 +39,7 @@ func getIndexInDigits62() string {
 	val62, ok := baseconv.Convert(s, baseconv.DigitsDec, baseconv.Digits62)
 	if ok != nil {
 		log.Printf("Cant covert index '%v' to Digits62\n", index)
-		os.Exit(1)
+		return ""
 	}
 	return val62
 
@@ -52,7 +50,6 @@ func split(u string) []string {
 	a = strings.SplitN(u, "/", 2)
 	if len(a) < 2 {
 		log.Printf("func split arg u=" + string(u) + " - is not correct! \n Correct example: Otus.ru/contacts \n")
-		os.Exit(2)
 	}
 	return a
 }
@@ -76,7 +73,7 @@ func (s MyShortener) Resolve(url string) string {
 	a := split(url)
 	u, ok := s.storage[a[1]]
 	if !ok {
-		return url + " not exist!"
+		return ""
 	}
 	return u
 }
